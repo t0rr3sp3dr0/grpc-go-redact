@@ -8,17 +8,26 @@ import (
 	"log"
 	"strconv"
 
+	_ "embed"
+
 	"golang.org/x/tools/go/ast/astutil"
 )
 
 const (
-	stringFuncMethodName = "String"
-	stringFuncGenFile    = "./gen/stringfunc.go"
+	stringFuncMethodName  = "String"
+	stringFuncGenFileName = "./gen/stringfunc.go"
 )
 
+//go:embed gen/stringfunc.go
+var stringFuncGenFile string
+
 func getGenParseInfo() (*ParseInfo, error) {
+	if len(stringFuncGenFile) == 0 {
+		return nil, errors.New("Failed to parse string func file")
+	}
+
 	fset := token.NewFileSet()
-	f, err := parser.ParseFile(fset, stringFuncGenFile, nil, parser.ParseComments)
+	f, err := parser.ParseFile(fset, stringFuncGenFileName, stringFuncGenFile, parser.ParseComments)
 	if err != nil {
 		return nil, err
 	}
