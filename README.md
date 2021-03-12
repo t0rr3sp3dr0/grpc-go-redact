@@ -20,3 +20,7 @@ Run `grpc-go-redact` with generated file `test.pb.go`.
 grpc-go-redact -input=./test.pb.go
 ```
 The custom .String() method will updated directly in the `test.pb.go` file.
+
+## Things to Note
+
+* Unexported fields will be removed when printing the string.

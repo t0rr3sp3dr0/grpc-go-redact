@@ -19,15 +19,14 @@ const (
 )
 
 
-// Will not redact non exported, but using json to convert will remove unexported fields
-// Handle Comments
-
-
 func main(){
 	var inputFile string
 	var genFile string
+	var outputFile string
+
 	flag.StringVar(&genFile, "gen", "./gen/stringfunc.go", "path to the gen file")
-	flag.StringVar(&inputFile, "input", "", "path to input file")
+	flag.StringVar(&inputFile, "input", "", "path to the input file")
+	flag.StringVar(&outputFile, "output", "", "path to the output file. If non specifid, will override the input file.")
 	flag.Parse()
 
 	if len(inputFile) == 0 {
@@ -38,15 +37,19 @@ func main(){
 		log.Fatal("gen file is mandatory")
 	}
 
-	fset := token.NewFileSet()
-	f, err := parser.ParseFile(fset, inputFile, nil, parser.ParseComments)
-	if err != nil {
-		return
+	if len(outputFile) == 0 {
+		outputFile = inputFile
 	}
 
 	genStringFunc, requiredImports, err := getStringFuncASTNode(genFile)
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	fset := token.NewFileSet()
+	f, err := parser.ParseFile(fset, inputFile, nil, parser.ParseComments)
+	if err != nil {
+		return
 	}
 
 	for _, reqiredImportPath := range requiredImports {
@@ -77,21 +80,6 @@ func main(){
 	if err := writeASTToFile(inputFile, fset, f); err != nil {
 		log.Fatal(err)
 	}
-}
-
-func writeASTToFile(filename string,  fset *token.FileSet, f *ast.File) error {
-	file, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
-	if err != nil {
-		return err
-	}
-
-	defer file.Close()
-
-	if err := printer.Fprint(file, fset, f); err != nil {
-		return err
-	}
-
-	return nil
 }
 
 

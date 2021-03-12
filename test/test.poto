@@ -1,0 +1,8 @@
+syntax = "proto3";
+package test;
+option go_package = "github.com/samrketer/grpc-go-react";
+
+message TestStruct {
+    string StandardValue = 1;
+    string SecretValue = 2;
+}
