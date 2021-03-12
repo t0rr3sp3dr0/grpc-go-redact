@@ -16,18 +16,41 @@ const (
 	stringFuncGenFile    = "./gen/stringfunc.go"
 )
 
-func GenerateStringFunc(fset *token.FileSet, f *ast.File) error {
-	genStringFunc, requiredImports, err := getStringFuncASTNode(stringFuncGenFile)
+func getGenParseInfo() (*ParseInfo, error) {
+	fset := token.NewFileSet()
+	f, err := parser.ParseFile(fset, stringFuncGenFile, nil, parser.ParseComments)
+	if err != nil {
+		return nil, err
+	}
+
+	return &ParseInfo{
+		Fset: fset,
+		F:    f,
+	}, nil
+}
+
+func GenerateStringFunc(target *ParseInfo) error {
+	genParseInfo, err := getGenParseInfo()
 	if err != nil {
 		return err
 	}
 
-	// Add required imports from the pre-gen file
-	for _, reqiredImportPath := range requiredImports {
-		astutil.AddImport(fset, f, reqiredImportPath)
+	// Add missing imports to the target file for the newly generate func
+	importsToAdd, err := getMissingImports(target, genParseInfo)
+	if err != nil {
+		return err
 	}
 
-	astutil.Apply(f, func(cr *astutil.Cursor) bool {
+	for _, importToAdd := range importsToAdd {
+		astutil.AddImport(target.Fset, target.F, importToAdd)
+	}
+
+	genStringFunc, err := getStringFuncASTNode(genParseInfo)
+	if err != nil {
+		return err
+	}
+
+	astutil.Apply(target.F, func(cr *astutil.Cursor) bool {
 		funcDecal, ok := cr.Node().(*ast.FuncDecl)
 		if !ok {
 			return true
@@ -51,21 +74,31 @@ func GenerateStringFunc(fset *token.FileSet, f *ast.File) error {
 	return nil
 }
 
-func getStringFuncASTNode(genfile string) (*ast.FuncDecl, []string, error) {
-	fset := token.NewFileSet()
-	f, err := parser.ParseFile(fset, genfile, nil, parser.ParseComments)
+func getMissingImports(target, genParseInfo *ParseInfo) ([]string, error) {
+	genRequiredImports, err := getImports(genParseInfo)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
+	targetImports, err := getImports(target)
+	if err != nil {
+		return nil, err
+	}
+
+	importsToAdd := []string{}
+	for genImport := range genRequiredImports {
+		if !targetImports[genImport] {
+			importsToAdd = append(importsToAdd, genImport)
+		}
+	}
+
+	return importsToAdd, nil
+}
+
+func getStringFuncASTNode(genParseInfo *ParseInfo) (*ast.FuncDecl, error) {
 	var stringFuncNode *ast.FuncDecl
 
-	requiredImports, err := getRequiredImports(fset, f)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	astutil.Apply(f, func(cr *astutil.Cursor) bool {
+	astutil.Apply(genParseInfo.F, func(cr *astutil.Cursor) bool {
 		funcDecal, ok := cr.Node().(*ast.FuncDecl)
 		if !ok {
 			return true
@@ -79,23 +112,23 @@ func getStringFuncASTNode(genfile string) (*ast.FuncDecl, []string, error) {
 	}, nil)
 
 	if stringFuncNode == nil {
-		return nil, nil, errors.New("Failed to find String Func")
+		return nil, errors.New("Failed to find String Func")
 	}
 
-	return stringFuncNode, requiredImports, nil
+	return stringFuncNode, nil
 }
 
-func getRequiredImports(fset *token.FileSet, f *ast.File) ([]string, error) {
-	requiredImports := []string{}
+func getImports(target *ParseInfo) (map[string]bool, error) {
+	requiredImports := map[string]bool{}
 
-	importLists := astutil.Imports(fset, f)
+	importLists := astutil.Imports(target.Fset, target.F)
 	for _, importList := range importLists {
 		for _, importObj := range importList {
 			path, err := strconv.Unquote(importObj.Path.Value)
 			if err != nil {
 				return nil, err
 			}
-			requiredImports = append(requiredImports, path)
+			requiredImports[path] = true
 		}
 	}
 

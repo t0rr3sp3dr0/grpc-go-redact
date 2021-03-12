@@ -8,6 +8,7 @@ import (
 )
 
 
+
 func main(){
 	var inputFile string
 	var outputFile string
@@ -31,11 +32,16 @@ func main(){
 		return
 	}
 
-	if err := GenerateStringFunc(fset, f); err != nil {
+	target := &ParseInfo{
+		Fset: fset,
+		F: f,
+	}
+
+	if err := GenerateStringFunc(target); err != nil {
 		log.Fatal(err)
 	}
 
-	if err := writeASTToFile(outputFile, fset, f); err != nil {
+	if err := writeASTToFile(outputFile, target); err != nil {
 		log.Fatal(err)
 	}
 }
