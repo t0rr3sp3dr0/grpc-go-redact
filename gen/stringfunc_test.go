@@ -40,7 +40,7 @@ func TestString(t *testing.T) {
 	for _, tc := range cases {
 		t.Run(tc.Name, func(t *testing.T) {
 			tStruct := &XXX{
-				NotSecret: tc.NonSecretVal,
+				NonSecret: tc.NonSecretVal,
 				Secret:    tc.SecretVal,
 			}
 
