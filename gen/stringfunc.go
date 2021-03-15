@@ -32,7 +32,7 @@ func (x *XXX) String() string {
 		case reflect.String:
 			if el.CanSet() {
 				tag := v.Tag.Get("nonsecret")
-				if tag != "true" {
+				if tag != "true" && el.String() != "" {
 					el.SetString("REDACTED")
 				}
 			}
