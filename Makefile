@@ -7,4 +7,5 @@ build:
 
 .PHONY: test
 test: build
-	./bin/grpc-go-redact -input ./test/test.pb.go -output ./bin/output.go
+	./bin/grpc-go-redact -input ./test/base/test.pb.go -output ./test/output.pb.go
+	go test ./...
