@@ -50,10 +50,6 @@ func GenerateStringFunc(target *ParseInfo) error {
 		return err
 	}
 
-	for _, importToAdd := range importsToAdd {
-		astutil.AddImport(target.Fset, target.F, importToAdd)
-	}
-
 	astutil.Apply(target.F, func(cr *astutil.Cursor) bool {
 		funcDecal, ok := cr.Node().(*ast.FuncDecl)
 		if !ok {
@@ -65,6 +61,10 @@ func GenerateStringFunc(target *ParseInfo) error {
 
 		if len(funcDecal.Recv.List) != 1 {
 			log.Fatal("invalid number of recievers")
+		}
+
+		for _, importToAdd := range importsToAdd {
+			astutil.AddImport(target.Fset, target.F, importToAdd)
 		}
 
 		genStringFunc, err := getStringFuncASTNode(genParseInfo)
