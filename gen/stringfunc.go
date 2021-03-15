@@ -2,6 +2,7 @@ package gen
 
 import (
 	"encoding/json"
+	"fmt"
 	"reflect"
 
 	"github.com/samkreter/redact"
@@ -9,7 +10,7 @@ import (
 
 type XXX struct {
 	Secret    string
-	NonSecret string `redact:"nonsecret"`
+	NonSecret string `nonsecret:"true"`
 }
 
 func (x *XXX) String() string {
@@ -38,6 +39,9 @@ func (x *XXX) String() string {
 
 func (x *XXX) Test() string {
 	ifv := reflect.ValueOf(x)
+
+	var hey XXX
+	fmt.Println(hey)
 
 	// ensure we use a pointer
 	if ifv.Kind() != reflect.Ptr {

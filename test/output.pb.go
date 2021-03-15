@@ -2,8 +2,9 @@ package test
 
 import (
 	proto "github.com/golang/protobuf/proto"
-	"encoding/json"
 	"github.com/samkreter/redact"
+	"fmt"
+	"encoding/json"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -37,24 +38,23 @@ func (x *TestStruct) Reset() {
 	}
 }
 func (x *TestStruct) String() string {
-	var copy XXX
+	var copy TestStructList
 	jsonBytes, err := json.Marshal(x)
 	if err != nil {
 		panic(err)
 	}
-	err = json.Unmarshal(jsonBytes,
-		&copy)
-	if err != nil {
-
-		panic(err,
-		)
+	err = json.Unmarshal(jsonBytes, &copy,
+	)
+	if err !=
+		nil {
+		panic(err)
 	}
 	if err := redact.Redact(&copy); err != nil {
-		panic(err,
-		)
+		panic(err)
 	}
 	jsonBytes, err = json.Marshal(copy)
-	if err != nil {
+	if err !=
+		nil {
 		panic(err)
 	}
 	return string(jsonBytes)
@@ -116,24 +116,23 @@ func (x *TestStructList) Reset() {
 	}
 }
 func (x *TestStructList) String() string {
-	var copy XXX
+	var copy TestStructList
 	jsonBytes, err := json.Marshal(x)
 	if err != nil {
 		panic(err)
 	}
-	err = json.Unmarshal(jsonBytes,
-		&copy)
-	if err != nil {
-
-		panic(err,
-		)
+	err = json.Unmarshal(jsonBytes, &copy,
+	)
+	if err !=
+		nil {
+		panic(err)
 	}
 	if err := redact.Redact(&copy); err != nil {
-		panic(err,
-		)
+		panic(err)
 	}
 	jsonBytes, err = json.Marshal(copy)
-	if err != nil {
+	if err !=
+		nil {
 		panic(err)
 	}
 	return string(jsonBytes)
