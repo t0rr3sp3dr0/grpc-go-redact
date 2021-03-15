@@ -54,11 +54,6 @@ func GenerateStringFunc(target *ParseInfo) error {
 		astutil.AddImport(target.Fset, target.F, importToAdd)
 	}
 
-	genStringFunc, err := getStringFuncASTNode(genParseInfo)
-	if err != nil {
-		return err
-	}
-
 	astutil.Apply(target.F, func(cr *astutil.Cursor) bool {
 		funcDecal, ok := cr.Node().(*ast.FuncDecl)
 		if !ok {
@@ -72,11 +67,14 @@ func GenerateStringFunc(target *ParseInfo) error {
 			log.Fatal("invalid number of recievers")
 		}
 
-		genStringFunc.Recv = funcDecal.Recv
-		// TODO: Allow for comments to be handled correctly
-		genStringFunc.Doc = nil
+		genStringFunc, err := getStringFuncASTNode(genParseInfo)
+		if err != nil {
+			log.Fatal(err)
+		}
 
-		cr.Replace(genStringFunc)
+		genStringFunc.Recv = funcDecal.Recv
+
+		cr.Replace(&genStringFunc)
 		return false
 	}, nil)
 
@@ -104,7 +102,7 @@ func getMissingImports(target, genParseInfo *ParseInfo) ([]string, error) {
 	return importsToAdd, nil
 }
 
-func getStringFuncASTNode(genParseInfo *ParseInfo) (*ast.FuncDecl, error) {
+func getStringFuncASTNode(genParseInfo *ParseInfo) (ast.FuncDecl, error) {
 	var stringFuncNode *ast.FuncDecl
 
 	astutil.Apply(genParseInfo.F, func(cr *astutil.Cursor) bool {
@@ -120,10 +118,10 @@ func getStringFuncASTNode(genParseInfo *ParseInfo) (*ast.FuncDecl, error) {
 	}, nil)
 
 	if stringFuncNode == nil {
-		return nil, errors.New("Failed to find String Func")
+		return ast.FuncDecl{}, errors.New("Failed to find String Func")
 	}
 
-	return stringFuncNode, nil
+	return *stringFuncNode, nil
 }
 
 func getImports(target *ParseInfo) (map[string]bool, error) {
