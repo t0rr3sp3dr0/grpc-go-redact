@@ -27,7 +27,7 @@ func main(){
 	}
 
 	fset := token.NewFileSet()
-	f, err := parser.ParseFile(fset, inputFile, nil, parser.ParseComments)
+	f, err := parser.ParseFile(fset, inputFile, nil, parser.AllErrors)
 	if err != nil {
 		return
 	}
