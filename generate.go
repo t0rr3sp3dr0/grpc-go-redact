@@ -27,7 +27,7 @@ func getGenParseInfo() (*ParseInfo, error) {
 	}
 
 	fset := token.NewFileSet()
-	f, err := parser.ParseFile(fset, stringFuncGenFileName, stringFuncGenFile, parser.ParseComments)
+	f, err := parser.ParseFile(fset, stringFuncGenFileName, stringFuncGenFile, parser.AllErrors)
 	if err != nil {
 		return nil, err
 	}
@@ -114,7 +114,6 @@ func getStringFuncASTNode(genParseInfo *ParseInfo) (*ast.FuncDecl, error) {
 		}
 		if funcDecal.Name.String() == stringFuncMethodName {
 			stringFuncNode = funcDecal
-			return false
 		}
 
 		return true
