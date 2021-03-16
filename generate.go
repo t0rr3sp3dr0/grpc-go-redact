@@ -67,12 +67,10 @@ func GenerateStringFunc(target *ParseInfo) error {
 			astutil.AddImport(target.Fset, target.F, importToAdd)
 		}
 
-		genStringFunc, err := getStringFuncASTNode(genParseInfo)
+		genStringFunc, err := getStringFuncASTNode(*funcDecal.Recv)
 		if err != nil {
 			log.Fatal(err)
 		}
-
-		genStringFunc.Recv = funcDecal.Recv
 
 		cr.Replace(&genStringFunc)
 		return false
@@ -102,18 +100,53 @@ func getMissingImports(target, genParseInfo *ParseInfo) ([]string, error) {
 	return importsToAdd, nil
 }
 
-func getStringFuncASTNode(genParseInfo *ParseInfo) (ast.FuncDecl, error) {
+func getNonPointTypeFromRecv(recv ast.FieldList) ast.Expr {
+	starExpr, ok := recv.List[0].Type.(*ast.StarExpr)
+	if !ok {
+		return recv.List[0].Type
+	}
+
+	return starExpr.X
+}
+
+func getStringFuncASTNode(targetRecv ast.FieldList) (ast.FuncDecl, error) {
 	var stringFuncNode *ast.FuncDecl
 
-	astutil.Apply(genParseInfo.F, func(cr *astutil.Cursor) bool {
-		funcDecal, ok := cr.Node().(*ast.FuncDecl)
-		if !ok {
-			return true
-		}
-		if funcDecal.Name.String() == stringFuncMethodName {
-			stringFuncNode = funcDecal
-		}
+	genParseInfo, err := getGenParseInfo()
+	if err != nil {
+		return ast.FuncDecl{}, nil
+	}
 
+	astutil.Apply(genParseInfo.F, func(cr *astutil.Cursor) bool {
+		switch node := cr.Node().(type) {
+		case *ast.FuncDecl:
+			if node.Name.String() == stringFuncMethodName {
+				stringFuncNode = node
+			}
+		// Handle replacing type for copy declaration
+		// TODO: should only be scoped to String func instead of global
+		case *ast.DeclStmt:
+			genDecl, ok := node.Decl.(*ast.GenDecl)
+			if !ok {
+				return true
+			}
+
+			if len(genDecl.Specs) != 1 {
+				return true
+			}
+
+			valSpec, ok := genDecl.Specs[0].(*ast.ValueSpec)
+			if !ok {
+				return true
+			}
+
+			if valSpec.Names[0].String() != "copy" {
+				return true
+			}
+
+			valSpec.Type = getNonPointTypeFromRecv(targetRecv)
+			return false
+		}
 		return true
 	}, nil)
 
@@ -121,7 +154,15 @@ func getStringFuncASTNode(genParseInfo *ParseInfo) (ast.FuncDecl, error) {
 		return ast.FuncDecl{}, errors.New("Failed to find String Func")
 	}
 
-	return *stringFuncNode, nil
+	retStringFunc := addRecv(*stringFuncNode, targetRecv)
+
+	return retStringFunc, nil
+}
+
+// addRecv adds a receiver to a func. Everything passed by value to ensure no side effects
+func addRecv(funcDecl ast.FuncDecl, recv ast.FieldList) ast.FuncDecl {
+	funcDecl.Recv = &recv
+	return funcDecl
 }
 
 func getImports(target *ParseInfo) (map[string]bool, error) {

@@ -2,43 +2,35 @@ package gen
 
 import (
 	"encoding/json"
-	"reflect"
+
+	"github.com/samkreter/redact"
 )
 
 type XXX struct {
 	Secret    string
-	NotSecret string `nonsecret:"true"`
+	NonSecret string `redact:"nonsecret"`
 }
 
 func (x *XXX) String() string {
-	ifv := reflect.ValueOf(x)
-
-	// ensure we use a pointer
-	if ifv.Kind() != reflect.Ptr {
-		ifv = reflect.ValueOf(&x)
+	var copy XXX
+	jsonBytes, err := json.Marshal(x)
+	if err != nil {
+		panic(err)
 	}
 
-	ift := reflect.Indirect(ifv).Type()
-	if ift.Kind() != reflect.Struct {
-		return ""
+	err = json.Unmarshal(jsonBytes, &copy)
+	if err != nil {
+		panic(err)
 	}
 
-	for i := 0; i < ift.NumField(); i++ {
-		v := ift.Field(i)
-		el := reflect.Indirect(ifv.Elem().FieldByName(v.Name))
-
-		// Currently only support redacting strings
-		switch el.Kind() {
-		case reflect.String:
-			if el.CanSet() {
-				tag := v.Tag.Get("nonsecret")
-				if tag != "true" && el.String() != "" {
-					el.SetString("REDACTED")
-				}
-			}
-		}
+	if err := redact.Redact(&copy); err != nil {
+		panic(err)
 	}
 
-	b, _ := json.Marshal(x)
-	return string(b)
+	jsonBytes, err = json.Marshal(copy)
+	if err != nil {
+		panic(err)
+	}
+
+	return string(jsonBytes)
 }
