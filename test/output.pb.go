@@ -39,25 +39,23 @@ func (x *TestStruct) Reset() {
 func (x *TestStruct) String() string {
 	var copy TestStruct
 	jsonBytes, err := json.Marshal(x)
-	if err !=
-		nil {
-		panic(err)
+	if err != nil {
+		return ""
 	}
 	err = json.Unmarshal(jsonBytes, &copy,
 	)
-	if err != nil {
-		panic(err,
-		)
+	if err !=
 
+		nil {
+		return ""
 	}
 	if err := redact.Redact(&copy); err != nil {
-		panic(err)
+		return ""
 	}
-	jsonBytes,
-		err = json.Marshal(copy)
-	if err != nil {
-		panic(
-			err)
+	jsonBytes, err = json.Marshal(copy)
+	if err !=
+		nil {
+		return ""
 	}
 	return string(jsonBytes)
 }
@@ -120,25 +118,23 @@ func (x *TestStructList) Reset() {
 func (x *TestStructList) String() string {
 	var copy TestStructList
 	jsonBytes, err := json.Marshal(x)
-	if err !=
-		nil {
-		panic(err)
+	if err != nil {
+		return ""
 	}
 	err = json.Unmarshal(jsonBytes, &copy,
 	)
-	if err != nil {
-		panic(err,
-		)
+	if err !=
 
+		nil {
+		return ""
 	}
 	if err := redact.Redact(&copy); err != nil {
-		panic(err)
+		return ""
 	}
-	jsonBytes,
-		err = json.Marshal(copy)
-	if err != nil {
-		panic(
-			err)
+	jsonBytes, err = json.Marshal(copy)
+	if err !=
+		nil {
+		return ""
 	}
 	return string(jsonBytes)
 }
