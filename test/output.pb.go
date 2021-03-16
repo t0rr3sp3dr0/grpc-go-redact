@@ -3,7 +3,6 @@ package test
 import (
 	proto "github.com/golang/protobuf/proto"
 	"github.com/samkreter/redact"
-	"fmt"
 	"encoding/json"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -25,7 +24,7 @@ type TestStruct struct {
 	unknownFields	protoimpl.UnknownFields
 
 	Secret		string	`protobuf:"bytes,1,opt,name=secret,proto3" json:"secret,omitempty"`
-	NonSecret	string	`protobuf:"bytes,2,opt,name=nonSecret,proto3" json:"nonSecret,omitempty" nonsecret:"true"`
+	NonSecret	string	`protobuf:"bytes,2,opt,name=nonSecret,proto3" json:"nonSecret,omitempty" redact:"nonsecret"`
 	SecretPtr	*string	`protobuf:"bytes,3,opt,name=secretPtr,proto3,oneof" json:"secretPtr,omitempty"`
 }
 
@@ -38,24 +37,27 @@ func (x *TestStruct) Reset() {
 	}
 }
 func (x *TestStruct) String() string {
-	var copy TestStructList
+	var copy TestStruct
 	jsonBytes, err := json.Marshal(x)
-	if err != nil {
+	if err !=
+		nil {
 		panic(err)
 	}
 	err = json.Unmarshal(jsonBytes, &copy,
 	)
-	if err !=
-		nil {
-		panic(err)
+	if err != nil {
+		panic(err,
+		)
+
 	}
 	if err := redact.Redact(&copy); err != nil {
 		panic(err)
 	}
-	jsonBytes, err = json.Marshal(copy)
-	if err !=
-		nil {
-		panic(err)
+	jsonBytes,
+		err = json.Marshal(copy)
+	if err != nil {
+		panic(
+			err)
 	}
 	return string(jsonBytes)
 }
@@ -118,22 +120,25 @@ func (x *TestStructList) Reset() {
 func (x *TestStructList) String() string {
 	var copy TestStructList
 	jsonBytes, err := json.Marshal(x)
-	if err != nil {
+	if err !=
+		nil {
 		panic(err)
 	}
 	err = json.Unmarshal(jsonBytes, &copy,
 	)
-	if err !=
-		nil {
-		panic(err)
+	if err != nil {
+		panic(err,
+		)
+
 	}
 	if err := redact.Redact(&copy); err != nil {
 		panic(err)
 	}
-	jsonBytes, err = json.Marshal(copy)
-	if err !=
-		nil {
-		panic(err)
+	jsonBytes,
+		err = json.Marshal(copy)
+	if err != nil {
+		panic(
+			err)
 	}
 	return string(jsonBytes)
 }

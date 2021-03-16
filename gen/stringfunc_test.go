@@ -14,49 +14,29 @@ const (
 )
 
 func TestString(t *testing.T) {
-	cases := []struct {
-		Name              string
-		SecretVal         string
-		NonSecretVal      string
-		containsSecret    bool
-		containsNonSecret bool
-	}{
-		{
-			Name:              "Basic Secret Redaction",
-			SecretVal:         secretVal,
-			NonSecretVal:      nonSecretVal,
-			containsNonSecret: true,
-			containsSecret:    false,
-		},
-		{
-			Name:              "Should not redact empty strings",
-			SecretVal:         "",
-			NonSecretVal:      nonSecretVal,
-			containsNonSecret: true,
-			containsSecret:    true,
-		},
-	}
+	t.Run("Basic Secret Redaction", func(t *testing.T) {
+		tStruct := &XXX{
+			NonSecret: nonSecretVal,
+			Secret:    secretVal,
+		}
 
-	for _, tc := range cases {
-		t.Run(tc.Name, func(t *testing.T) {
-			tStruct := &XXX{
-				NonSecret: tc.NonSecretVal,
-				Secret:    tc.SecretVal,
-			}
+		strVal := fmt.Sprintln(tStruct)
 
-			strVal := fmt.Sprintln(tStruct)
+		assert.False(t, strings.Contains(strVal, secretVal), "should not contain secret value")
+		assert.True(t, strings.Contains(strVal, "REDACTED"), "should contain redacted string")
+		assert.True(t, strings.Contains(strVal, nonSecretVal), "should contain non secret value")
+	})
 
-			assert.Equal(t, tc.containsSecret, strings.Contains(strVal, tc.SecretVal),
-				"should contain expected secret valu")
+	t.Run("Should still redact empty strings", func(t *testing.T) {
+		tStruct := &XXX{
+			NonSecret: nonSecretVal,
+			Secret:    "",
+		}
 
-			if tc.containsSecret {
-				assert.False(t, strings.Contains(strVal, "REDACTED"), "should not contain redacted string")
-			} else {
-				assert.True(t, strings.Contains(strVal, "REDACTED"), "should contain redacted string")
-			}
+		strVal := fmt.Sprintln(tStruct)
 
-			assert.Equal(t, tc.containsNonSecret, strings.Contains(strVal, tc.NonSecretVal),
-				"should contain expected non secret valu")
-		})
-	}
+		assert.True(t, strings.Contains(strVal, "REDACTED"), "should contain redacted string")
+		assert.True(t, strings.Contains(strVal, nonSecretVal), "should contain  non secret value")
+	})
+
 }

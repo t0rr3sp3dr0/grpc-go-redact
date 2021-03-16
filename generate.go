@@ -67,7 +67,7 @@ func GenerateStringFunc(target *ParseInfo) error {
 			astutil.AddImport(target.Fset, target.F, importToAdd)
 		}
 
-		genStringFunc, err := getStringFuncASTNode(genParseInfo, *funcDecal.Recv)
+		genStringFunc, err := getStringFuncASTNode(*funcDecal.Recv)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -100,7 +100,7 @@ func getMissingImports(target, genParseInfo *ParseInfo) ([]string, error) {
 	return importsToAdd, nil
 }
 
-func getNonPointTypeFromRecv(recv *ast.FieldList) ast.Expr {
+func getNonPointTypeFromRecv(recv ast.FieldList) ast.Expr {
 	starExpr, ok := recv.List[0].Type.(*ast.StarExpr)
 	if !ok {
 		return recv.List[0].Type
@@ -109,11 +109,22 @@ func getNonPointTypeFromRecv(recv *ast.FieldList) ast.Expr {
 	return starExpr.X
 }
 
-func getStringFuncASTNode(genParseInfo *ParseInfo, targetRecv ast.FieldList) (ast.FuncDecl, error) {
+func getStringFuncASTNode(targetRecv ast.FieldList) (ast.FuncDecl, error) {
 	var stringFuncNode *ast.FuncDecl
+
+	genParseInfo, err := getGenParseInfo()
+	if err != nil {
+		return ast.FuncDecl{}, nil
+	}
 
 	astutil.Apply(genParseInfo.F, func(cr *astutil.Cursor) bool {
 		switch node := cr.Node().(type) {
+		case *ast.FuncDecl:
+			if node.Name.String() == stringFuncMethodName {
+				stringFuncNode = node
+			}
+		// Handle replacing type for copy declaration
+		// TODO: should only be scoped to String func instead of global
 		case *ast.DeclStmt:
 			genDecl, ok := node.Decl.(*ast.GenDecl)
 			if !ok {
@@ -129,12 +140,12 @@ func getStringFuncASTNode(genParseInfo *ParseInfo, targetRecv ast.FieldList) (as
 				return true
 			}
 
-			valSpec.Type = getNonPointTypeFromRecv(&targetRecv)
-
-		case *ast.FuncDecl:
-			if node.Name.String() == stringFuncMethodName {
-				stringFuncNode = node
+			if valSpec.Names[0].String() != "copy" {
+				return true
 			}
+
+			valSpec.Type = getNonPointTypeFromRecv(targetRecv)
+			return false
 		}
 		return true
 	}, nil)

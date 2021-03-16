@@ -30,7 +30,7 @@ type TestStruct struct {
 	unknownFields protoimpl.UnknownFields
 
 	Secret    string  `protobuf:"bytes,1,opt,name=secret,proto3" json:"secret,omitempty"`
-	NonSecret string  `protobuf:"bytes,2,opt,name=nonSecret,proto3" json:"nonSecret,omitempty" nonsecret:"true"`
+	NonSecret string  `protobuf:"bytes,2,opt,name=nonSecret,proto3" json:"nonSecret,omitempty" redact:"nonsecret"`
 	SecretPtr *string `protobuf:"bytes,3,opt,name=secretPtr,proto3,oneof" json:"secretPtr,omitempty"`
 }
 
