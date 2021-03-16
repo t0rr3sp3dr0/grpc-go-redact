@@ -5,7 +5,7 @@ github.com/davecgh/go-spew/spew
 github.com/golang/protobuf/proto
 # github.com/pmezard/go-difflib v1.0.0
 github.com/pmezard/go-difflib/difflib
-# github.com/samkreter/redact v0.0.0-20210315222923-7eb72c954f9f
+# github.com/samkreter/redact v0.0.1
 ## explicit
 github.com/samkreter/redact
 # github.com/stretchr/testify v1.7.0

@@ -9,27 +9,28 @@ import (
 type XXX struct {
 	Secret    string
 	NonSecret string `redact:"nonsecret"`
+	SecretPtr *string
 }
 
 func (x *XXX) String() string {
 	var copy XXX
 	jsonBytes, err := json.Marshal(x)
 	if err != nil {
-		panic(err)
+		return ""
 	}
 
 	err = json.Unmarshal(jsonBytes, &copy)
 	if err != nil {
-		panic(err)
+		return ""
 	}
 
 	if err := redact.Redact(&copy); err != nil {
-		panic(err)
+		return ""
 	}
 
 	jsonBytes, err = json.Marshal(copy)
 	if err != nil {
-		panic(err)
+		return ""
 	}
 
 	return string(jsonBytes)
