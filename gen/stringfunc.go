@@ -9,6 +9,7 @@ import (
 type XXX struct {
 	Secret    string
 	NonSecret string `redact:"nonsecret"`
+	SecretPtr *string
 }
 
 func (x *XXX) String() string {
