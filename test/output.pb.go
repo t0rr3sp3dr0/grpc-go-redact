@@ -37,6 +37,16 @@ func (x *TestStruct) Reset() {
 	}
 }
 func (x *TestStruct) String() string {
+	type EnumType interface {
+		Descriptor() protoreflect.
+			EnumDescriptor
+		Number() protoreflect.EnumNumber
+	}
+	enumType, ok := interface{}(x).(EnumType)
+	if ok {
+		return protoimpl.X.EnumStringOf(enumType.Descriptor(), enumType.
+			Number())
+	}
 	var copy TestStruct
 	jsonBytes, err := json.Marshal(x)
 	if err != nil {
@@ -44,20 +54,19 @@ func (x *TestStruct) String() string {
 	}
 	err = json.Unmarshal(jsonBytes, &copy,
 	)
-	if err !=
-
-		nil {
+	if err != nil {
 		return ""
 	}
-	if err := redact.Redact(&copy); err != nil {
+	if err :=
+		redact.Redact(&copy); err != nil {
 		return ""
 	}
 	jsonBytes, err = json.Marshal(copy)
-	if err !=
-		nil {
+	if err != nil {
 		return ""
 	}
-	return string(jsonBytes)
+	return string(jsonBytes,
+	)
 }
 
 func (*TestStruct) ProtoMessage()	{}
@@ -116,6 +125,16 @@ func (x *TestStructList) Reset() {
 	}
 }
 func (x *TestStructList) String() string {
+	type EnumType interface {
+		Descriptor() protoreflect.
+			EnumDescriptor
+		Number() protoreflect.EnumNumber
+	}
+	enumType, ok := interface{}(x).(EnumType)
+	if ok {
+		return protoimpl.X.EnumStringOf(enumType.Descriptor(), enumType.
+			Number())
+	}
 	var copy TestStructList
 	jsonBytes, err := json.Marshal(x)
 	if err != nil {
@@ -123,20 +142,19 @@ func (x *TestStructList) String() string {
 	}
 	err = json.Unmarshal(jsonBytes, &copy,
 	)
-	if err !=
-
-		nil {
+	if err != nil {
 		return ""
 	}
-	if err := redact.Redact(&copy); err != nil {
+	if err :=
+		redact.Redact(&copy); err != nil {
 		return ""
 	}
 	jsonBytes, err = json.Marshal(copy)
-	if err !=
-		nil {
+	if err != nil {
 		return ""
 	}
-	return string(jsonBytes)
+	return string(jsonBytes,
+	)
 }
 
 func (*TestStructList) ProtoMessage()	{}

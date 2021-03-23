@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 
 	"github.com/samkreter/redact"
+	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/runtime/protoimpl"
 )
 
 type XXX struct {
@@ -13,6 +15,16 @@ type XXX struct {
 }
 
 func (x *XXX) String() string {
+	type EnumType interface {
+		Descriptor() protoreflect.EnumDescriptor
+		Number() protoreflect.EnumNumber
+	}
+
+	enumType, ok := interface{}(x).(EnumType)
+	if ok {
+		return protoimpl.X.EnumStringOf(enumType.Descriptor(), enumType.Number())
+	}
+
 	var copy XXX
 	jsonBytes, err := json.Marshal(x)
 	if err != nil {
