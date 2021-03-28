@@ -2,8 +2,8 @@ package test
 
 import (
 	proto "github.com/golang/protobuf/proto"
-	"github.com/samkreter/redact"
 	"encoding/json"
+	"github.com/samkreter/redact"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"

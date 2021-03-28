@@ -2,50 +2,66 @@ package main
 
 import (
 	"flag"
-    "go/parser"
-    "go/token"
 	"log"
 )
 
+const (
+	maxWorkQueueWorkers = 100
+)
 
-
-func main(){
+func main() {
 	var inputFile string
 	var outputFile string
+	var inputDir string
 
 	flag.StringVar(&inputFile, "input", "", "path to the input file")
+	flag.StringVar(&inputDir, "dir", "", "path to the input dir")
 	flag.StringVar(&outputFile, "output", "", "path to the output file. If non specifid, will override the input file.")
 	flag.Parse()
 
-	if len(inputFile) == 0 {
-		log.Fatal("input file is mandatory")
+	if len(inputFile) == 0 && len(inputDir) == 0 {
+		log.Fatal("input file or dir is mandatory")
 	}
-
 
 	if len(outputFile) == 0 {
 		outputFile = inputFile
 	}
 
-	fset := token.NewFileSet()
-	f, err := parser.ParseFile(fset, inputFile, nil, parser.AllErrors)
-	if err != nil {
-		return
+	fileToGenerate := []*ParseInfo{}
+
+	// Handle single file
+	if len(inputFile) != 0 {
+		parseInfo, err := ParseFile(inputFile)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		parseInfo.OutputFile = outputFile
+		fileToGenerate = append(fileToGenerate, parseInfo)
 	}
 
-	target := &ParseInfo{
-		Fset: fset,
-		F: f,
+	// Handle parsing entire dir
+	if len(inputDir) != 0 {
+		parseInfos, err := ParseDir(inputDir)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		fileToGenerate = append(fileToGenerate, parseInfos...)
 	}
 
-	if err := GenerateStringFunc(target); err != nil {
-		log.Fatal(err)
+	workQueue := NewWorkQueue()
+	defer workQueue.Shutdown()
+
+	for _, target := range fileToGenerate {
+		workQueue.AddJob(target)
 	}
 
-	if err := writeASTToFile(outputFile, target); err != nil {
-		log.Fatal(err)
+	numWorkers := maxWorkQueueWorkers
+	if len(fileToGenerate) < maxWorkQueueWorkers {
+		numWorkers = len(fileToGenerate)
 	}
+
+	workQueue.StartWorkers(numWorkers)
+	workQueue.WaitForJobs()
 }
-
-
-
-
