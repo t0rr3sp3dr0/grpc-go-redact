@@ -50,7 +50,7 @@ func main() {
 		fileToGenerate = append(fileToGenerate, parseInfos...)
 	}
 
-	workQueue := NewWorkQueue()
+	workQueue := NewWorkQueue(len(fileToGenerate))
 	defer workQueue.Shutdown()
 
 	for _, target := range fileToGenerate {
@@ -61,6 +61,9 @@ func main() {
 	if len(fileToGenerate) < maxWorkQueueWorkers {
 		numWorkers = len(fileToGenerate)
 	}
+
+	log.Println("Number of jobs to process: ", workQueue.NumJobs())
+	log.Println("Starting ", numWorkers, " workers")
 
 	workQueue.StartWorkers(numWorkers)
 	workQueue.WaitForJobs()

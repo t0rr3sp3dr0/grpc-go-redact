@@ -6,7 +6,6 @@ import (
 	"go/parser"
 	"go/printer"
 	"go/token"
-	"io/fs"
 	"os"
 	"path/filepath"
 	"strings"
@@ -22,11 +21,6 @@ type ParseInfo struct {
 	F          *ast.File
 }
 
-func protoGenFileFilter(fileInfo fs.FileInfo) bool {
-	fmt.Println(fileInfo.Name())
-	return strings.HasSuffix(fileInfo.Name(), generatedFileExtension)
-}
-
 func ParseFile(filePath string) (*ParseInfo, error) {
 	fset := token.NewFileSet()
 	f, err := parser.ParseFile(fset, filePath, nil, parser.AllErrors)
@@ -35,8 +29,9 @@ func ParseFile(filePath string) (*ParseInfo, error) {
 	}
 
 	return &ParseInfo{
-		Fset: fset,
-		F:    f,
+		OutputFile: filePath,
+		Fset:       fset,
+		F:          f,
 	}, nil
 }
 
@@ -49,11 +44,14 @@ func ParseDir(dirPath string) ([]*ParseInfo, error) {
 				return err
 			}
 
+			// skip the vendor folders
+			if info.IsDir() && info.Name() == "vendor" {
+				return filepath.SkipDir
+			}
+
 			if !strings.HasSuffix(path, generatedFileExtension) {
 				return nil
 			}
-
-			fmt.Println("Parsing file: ", path)
 
 			parseInfo, err := ParseFile(path)
 			if err != nil {
