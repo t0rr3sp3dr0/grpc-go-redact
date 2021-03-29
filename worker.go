@@ -55,19 +55,16 @@ func (w *WorkQueue) worker() {
 		select {
 		case job, ok := <-w.jobChan:
 			if !ok {
-				log.Println("Job queue closed, stopping worker")
 				return
 			}
 
-			log.Println("Worker processing job: ", job.OutputFile)
-
 			if err := GenerateStringFunc(job); err != nil {
-				log.Println(err)
+				log.Println("ERR:", err)
 				continue
 			}
 
 			if err := writeASTToFile(job); err != nil {
-				log.Println(err)
+				log.Println("ERR:", err)
 				continue
 			}
 
