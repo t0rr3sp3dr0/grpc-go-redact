@@ -6,14 +6,16 @@ import (
 )
 
 const (
-	maxWorkQueueWorkers = 100
+	defaultNumWorkers = 5
 )
 
 func main() {
 	var inputFile string
 	var outputFile string
 	var inputDir string
+	var numWorkers int
 
+	flag.IntVar(&numWorkers, "workers", defaultNumWorkers, "the number of concurrent workers")
 	flag.StringVar(&inputFile, "input", "", "path to the input file")
 	flag.StringVar(&inputDir, "dir", "", "path to the input dir")
 	flag.StringVar(&outputFile, "output", "", "path to the output file. If non specifid, will override the input file.")
@@ -57,8 +59,7 @@ func main() {
 		workQueue.AddJob(target)
 	}
 
-	numWorkers := maxWorkQueueWorkers
-	if len(fileToGenerate) < maxWorkQueueWorkers {
+	if len(fileToGenerate) < numWorkers {
 		numWorkers = len(fileToGenerate)
 	}
 
