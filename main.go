@@ -1,8 +1,10 @@
 package main
 
 import (
+	"context"
 	"flag"
-	"log"
+
+	"github.com/samkreter/go-core/log"
 )
 
 const (
@@ -14,15 +16,29 @@ func main() {
 	var outputFile string
 	var inputDir string
 	var numWorkers int
+	var verboseLogging bool
 
+	flag.BoolVar(&verboseLogging, "v", false, "enable verbose logging")
 	flag.IntVar(&numWorkers, "workers", defaultNumWorkers, "the number of concurrent workers")
 	flag.StringVar(&inputFile, "input", "", "path to the input file")
 	flag.StringVar(&inputDir, "dir", "", "path to the input dir")
 	flag.StringVar(&outputFile, "output", "", "path to the output file. If non specifid, will override the input file.")
 	flag.Parse()
 
+	ctx := context.Background()
+	logger := log.G(ctx)
+
 	if len(inputFile) == 0 && len(inputDir) == 0 {
-		log.Fatal("input file or dir is mandatory")
+		logger.Fatal("input file or dir is mandatory")
+	}
+
+	logLevel := "info"
+	if verboseLogging {
+		logLevel = "debug"
+	}
+
+	if err := log.SetLogLevel(logLevel); err != nil {
+		logger.Errorf("failed to set log level to : '%s'", logLevel)
 	}
 
 	if len(outputFile) == 0 {
@@ -35,7 +51,7 @@ func main() {
 	if len(inputFile) != 0 {
 		parseInfo, err := ParseFile(inputFile)
 		if err != nil {
-			log.Fatal(err)
+			logger.Fatal(err)
 		}
 
 		parseInfo.OutputFile = outputFile
@@ -46,7 +62,7 @@ func main() {
 	if len(inputDir) != 0 {
 		parseInfos, err := ParseDir(inputDir)
 		if err != nil {
-			log.Fatal(err)
+			logger.Fatal(err)
 		}
 
 		fileToGenerate = append(fileToGenerate, parseInfos...)
@@ -63,8 +79,8 @@ func main() {
 		numWorkers = len(fileToGenerate)
 	}
 
-	log.Println("Number of jobs to process: ", workQueue.NumJobs())
-	log.Println("Starting ", numWorkers, " workers")
+	logger.Debugln("Number of jobs to process: ", workQueue.NumJobs())
+	logger.Debugln("Starting ", numWorkers, " workers")
 
 	workQueue.StartWorkers(numWorkers)
 	workQueue.WaitForJobs()

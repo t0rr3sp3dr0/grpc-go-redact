@@ -50,6 +50,8 @@ func GenerateStringFunc(target *ParseInfo) error {
 		return err
 	}
 
+	mutated := false
+
 	astutil.Apply(target.F, func(cr *astutil.Cursor) bool {
 		funcDecal, ok := cr.Node().(*ast.FuncDecl)
 		if !ok {
@@ -62,6 +64,8 @@ func GenerateStringFunc(target *ParseInfo) error {
 		if len(funcDecal.Recv.List) != 1 {
 			log.Fatal("invalid number of recievers")
 		}
+
+		mutated = true
 
 		for _, importToAdd := range importsToAdd {
 			astutil.AddImport(target.Fset, target.F, importToAdd)
@@ -76,6 +80,10 @@ func GenerateStringFunc(target *ParseInfo) error {
 		return false
 	}, nil)
 
+	if mutated {
+		ast.SortImports(target.Fset, target.F)
+	}
+
 	return nil
 }
 
@@ -85,14 +93,9 @@ func getMissingImports(target, genParseInfo *ParseInfo) ([]string, error) {
 		return nil, err
 	}
 
-	targetImports, err := getImports(target)
-	if err != nil {
-		return nil, err
-	}
-
 	importsToAdd := []string{}
 	for genImport := range genRequiredImports {
-		if !targetImports[genImport] {
+		if !astutil.UsesImport(target.F, genImport) {
 			importsToAdd = append(importsToAdd, genImport)
 		}
 	}
