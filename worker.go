@@ -1,9 +1,10 @@
 package main
 
 import (
-	"fmt"
-	"log"
+	"context"
 	"sync"
+
+	"github.com/samkreter/go-core/log"
 )
 
 type jobType *ParseInfo
@@ -49,6 +50,9 @@ func (w *WorkQueue) Shutdown() {
 
 // TODO: correctly handle errors
 func (w *WorkQueue) worker() {
+	ctx := context.Background()
+	logger := log.G(ctx)
+
 	defer w.wg.Done()
 
 	for {
@@ -59,16 +63,17 @@ func (w *WorkQueue) worker() {
 			}
 
 			if err := GenerateStringFunc(job); err != nil {
-				log.Println("ERR:", err)
+				logger.Errorln("failed to generate string func with err: ", err)
 				continue
 			}
 
 			if err := writeASTToFile(job); err != nil {
-				log.Println("ERR:", err)
+				logger.Errorln("failed to write ast to file with err: ", err)
 				continue
 			}
 
-			fmt.Println("completed generated file: ", job.OutputFile)
+			logger.Debugln("Completed task: ", job.OutputFile)
+
 		default:
 			return
 		}
