@@ -32,6 +32,8 @@ github.com/samkreter/go-core v0.1.0 h1:NqdOocNEnRWTFsRBEbXMdZiLWPIc96ojyFtxD11Ic
 github.com/samkreter/go-core v0.1.0/go.mod h1:OF2t83DwTOn7r9yeyDwdPB+4eVjYFsb5WQvdkzlItSo=
 github.com/samkreter/redact v0.0.1 h1:f9WslhnJw3Mgm9yQL2qhasex6mN0gLBN11juJauQB6g=
 github.com/samkreter/redact v0.0.1/go.mod h1:iFuaXO0YaF1TKLcdtf2xFOkG0uGu5yxxrZYOBjCtTEc=
+github.com/samkreter/redact v0.0.2 h1:OZrag9WJrN1ZH1yESqNSb4HoAAJoicd4q+hTwP07uMA=
+github.com/samkreter/redact v0.0.2/go.mod h1:iFuaXO0YaF1TKLcdtf2xFOkG0uGu5yxxrZYOBjCtTEc=
 github.com/sirupsen/logrus v1.8.1 h1:dJKuHgqk1NNQlqoA6BTlM1Wf9DOH3NBjQyu0h9+AZZE=
 github.com/sirupsen/logrus v1.8.1/go.mod h1:yWOB1SBYBC5VeMP7gHvWumXLIWorT60ONWic61uBYv0=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
