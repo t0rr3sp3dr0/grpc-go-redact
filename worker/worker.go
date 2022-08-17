@@ -1,13 +1,15 @@
-package main
+package worker
 
 import (
 	"context"
+	"github.com/samkreter/grpc-go-redact/filehandler"
+	"github.com/samkreter/grpc-go-redact/generator"
 	"sync"
 
 	"github.com/samkreter/go-core/log"
 )
 
-type jobType *ParseInfo
+type jobType *filehandler.ParseInfo
 
 type WorkQueue struct {
 	wg      sync.WaitGroup
@@ -62,12 +64,12 @@ func (w *WorkQueue) worker() {
 				return
 			}
 
-			if err := GenerateStringFunc(job); err != nil {
+			if err := generator.GenerateStringFunc(job); err != nil {
 				logger.Errorln("failed to generate string func with err: ", err)
 				continue
 			}
 
-			if err := writeASTToFile(job); err != nil {
+			if err := filehandler.WriteASTToFile(job); err != nil {
 				logger.Errorln("failed to write ast to file with err: ", err)
 				continue
 			}

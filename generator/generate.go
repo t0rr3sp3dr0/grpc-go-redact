@@ -1,7 +1,8 @@
-package main
+package generator
 
 import (
 	"errors"
+	"github.com/samkreter/grpc-go-redact/filehandler"
 	"go/ast"
 	"go/parser"
 	"go/token"
@@ -21,7 +22,7 @@ const (
 //go:embed gen/stringfunc.go
 var stringFuncGenFile string
 
-func getGenParseInfo() (*ParseInfo, error) {
+func getGenParseInfo() (*filehandler.ParseInfo, error) {
 	if len(stringFuncGenFile) == 0 {
 		return nil, errors.New("Failed to parse string func file")
 	}
@@ -32,13 +33,13 @@ func getGenParseInfo() (*ParseInfo, error) {
 		return nil, err
 	}
 
-	return &ParseInfo{
+	return &filehandler.ParseInfo{
 		Fset: fset,
 		F:    f,
 	}, nil
 }
 
-func GenerateStringFunc(target *ParseInfo) error {
+func GenerateStringFunc(target *filehandler.ParseInfo) error {
 	genParseInfo, err := getGenParseInfo()
 	if err != nil {
 		return err
@@ -87,7 +88,7 @@ func GenerateStringFunc(target *ParseInfo) error {
 	return nil
 }
 
-func getMissingImports(target, genParseInfo *ParseInfo) ([]string, error) {
+func getMissingImports(target, genParseInfo *filehandler.ParseInfo) ([]string, error) {
 	genRequiredImports, err := getImports(genParseInfo)
 	if err != nil {
 		return nil, err
@@ -168,7 +169,7 @@ func addRecv(funcDecl ast.FuncDecl, recv ast.FieldList) ast.FuncDecl {
 	return funcDecl
 }
 
-func getImports(target *ParseInfo) (map[string]bool, error) {
+func getImports(target *filehandler.ParseInfo) (map[string]bool, error) {
 	requiredImports := map[string]bool{}
 
 	importLists := astutil.Imports(target.Fset, target.F)
