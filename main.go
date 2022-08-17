@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"flag"
+	"github.com/samkreter/grpc-go-redact/filehandler"
+	"github.com/samkreter/grpc-go-redact/worker"
 
 	"github.com/samkreter/go-core/log"
 )
@@ -45,11 +47,11 @@ func main() {
 		outputFile = inputFile
 	}
 
-	fileToGenerate := []*ParseInfo{}
+	fileToGenerate := []*filehandler.ParseInfo{}
 
 	// Handle single file
 	if len(inputFile) != 0 {
-		parseInfo, err := ParseFile(inputFile)
+		parseInfo, err := filehandler.ParseFile(inputFile)
 		if err != nil {
 			logger.Fatal(err)
 		}
@@ -60,7 +62,7 @@ func main() {
 
 	// Handle parsing entire dir
 	if len(inputDir) != 0 {
-		parseInfos, err := ParseDir(inputDir)
+		parseInfos, err := filehandler.ParseDir(inputDir)
 		if err != nil {
 			logger.Fatal(err)
 		}
@@ -68,7 +70,7 @@ func main() {
 		fileToGenerate = append(fileToGenerate, parseInfos...)
 	}
 
-	workQueue := NewWorkQueue(len(fileToGenerate))
+	workQueue := worker.NewWorkQueue(len(fileToGenerate))
 	defer workQueue.Shutdown()
 
 	for _, target := range fileToGenerate {

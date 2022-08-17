@@ -1,4 +1,4 @@
-package main
+package filehandler
 
 import (
 	"fmt"
@@ -23,7 +23,7 @@ type ParseInfo struct {
 
 func ParseFile(filePath string) (*ParseInfo, error) {
 	fset := token.NewFileSet()
-	f, err := parser.ParseFile(fset, filePath, nil, parser.AllErrors)
+	f, err := parser.ParseFile(fset, filePath, nil, parser.AllErrors|parser.ParseComments)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse file %s with err: %v", filePath, err)
 	}
@@ -69,7 +69,7 @@ func ParseDir(dirPath string) ([]*ParseInfo, error) {
 	return parseInfos, nil
 }
 
-func writeASTToFile(parseInfo *ParseInfo) error {
+func WriteASTToFile(parseInfo *ParseInfo) error {
 	file, err := os.OpenFile(parseInfo.OutputFile, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {
 		return err
