@@ -15,3 +15,9 @@ bin/**
 
 # Don't checkin the binary
 grpc-go-redact
+
+# Test Files
+test/input.pb.go
+test/input.txt
+test/output.pb.go
+test/output.txt

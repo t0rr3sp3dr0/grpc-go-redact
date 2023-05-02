@@ -1,4 +1,4 @@
-package gen
+package internal
 
 import (
 	"fmt"
@@ -14,28 +14,31 @@ const (
 )
 
 var (
-	secretPtrVal  = "thisIsAPtrSecret"
+	secretPtrVal    = "thisIsAPtrSecret"
+	nonSecretPtrVal = "thisIsAPtrStandardVal"
 )
-
 
 func TestString(t *testing.T) {
 	t.Run("Basic Secret Redaction", func(t *testing.T) {
-		tStruct := &XXX{
-			NonSecret: nonSecretVal,
-			Secret:    secretVal,
-			SecretPtr: &secretPtrVal,
+		tStruct := &X{
+			Secret:       secretVal,
+			NonSecret:    nonSecretVal,
+			SecretPtr:    &secretPtrVal,
+			NonSecretPtr: &nonSecretPtrVal,
 		}
 
 		strVal := fmt.Sprintln(tStruct)
+		println(strVal)
 
 		assert.False(t, strings.Contains(strVal, secretVal), "should not contain secret value")
 		assert.False(t, strings.Contains(strVal, secretPtrVal), "should not contain ptr secret value")
 		assert.True(t, strings.Contains(strVal, "REDACTED"), "should contain redacted string")
 		assert.True(t, strings.Contains(strVal, nonSecretVal), "should contain non secret value")
+		assert.True(t, strings.Contains(strVal, nonSecretPtrVal), "should contain ptr non secret value")
 	})
 
 	t.Run("Should still redact empty strings", func(t *testing.T) {
-		tStruct := &XXX{
+		tStruct := &X{
 			NonSecret: nonSecretVal,
 			Secret:    "",
 		}

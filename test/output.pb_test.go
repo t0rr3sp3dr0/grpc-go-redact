@@ -18,7 +18,7 @@ const (
 
 func TestStringTestStruct(t *testing.T) {
 	t.Run("Basic Secret Redaction", func(t *testing.T) {
-		tStruct := &TestStruct{
+		tStruct := &X{
 			NonSecret: nonSecretVal,
 			Secret:    secretVal,
 		}
@@ -31,7 +31,7 @@ func TestStringTestStruct(t *testing.T) {
 	})
 
 	t.Run("Should still redact empty strings", func(t *testing.T) {
-		tStruct := &TestStruct{
+		tStruct := &X{
 			NonSecret: nonSecretVal,
 			Secret:    "",
 		}
@@ -46,13 +46,13 @@ func TestStringTestStruct(t *testing.T) {
 
 func TestStringTestStructList(t *testing.T) {
 	t.Run("Basic Secret Redaction", func(t *testing.T) {
-		tStruct := &TestStruct{
+		tStruct := &X{
 			NonSecret: nonSecretVal,
 			Secret:    secretVal,
 		}
 
-		list := &TestStructList{
-			Data: []*TestStruct{tStruct},
+		list := &Xs{
+			Data: []*X{tStruct},
 		}
 
 		strVal := fmt.Sprintln(list)
@@ -63,13 +63,13 @@ func TestStringTestStructList(t *testing.T) {
 	})
 
 	t.Run("Should still redact empty strings", func(t *testing.T) {
-		tStruct := &TestStruct{
+		tStruct := &X{
 			NonSecret: nonSecretVal,
 			Secret:    "",
 		}
 
-		list := &TestStructList{
-			Data: []*TestStruct{tStruct},
+		list := &Xs{
+			Data: []*X{tStruct},
 		}
 
 		strVal := fmt.Sprintln(list)
@@ -82,22 +82,27 @@ func TestStringTestStructList(t *testing.T) {
 
 func TestReadAndWrite(t *testing.T) {
 	t.Run("Reading And Writing File Keeps Comments", func(t *testing.T) {
-		parseInfo, err := filehandler.ParseFile("./base/test_input.pb.go.tmpl")
+		const (
+			src = "output.pb.go"
+			dst = "output.txt"
+		)
+
+		parseInfo, err := filehandler.ParseFile(src)
 		assert.Nil(t, err)
 		assert.NotNil(t, parseInfo.F.Comments)
 
 		err = generator.GenerateStringFunc(parseInfo)
 		assert.Nil(t, err)
 
-		parseInfo.OutputFile = "./base/test_output.pb.go"
+		parseInfo.OutputFile = dst
 
 		err = filehandler.WriteASTToFile(parseInfo)
 		assert.Nil(t, err)
 
-		baseBytes, err := ioutil.ReadFile("./base/test_output_base.pb.go.tmpl")
+		baseBytes, err := ioutil.ReadFile(src)
 		assert.Nil(t, err)
 
-		writenBytes, err := ioutil.ReadFile("./base/test_output.pb.go")
+		writenBytes, err := ioutil.ReadFile(dst)
 		assert.Nil(t, err)
 
 		assert.Equal(t, baseBytes, writenBytes)
