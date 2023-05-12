@@ -1,25 +1,25 @@
 package generator
 
 import (
+	_ "embed"
 	"errors"
-	"github.com/samkreter/grpc-go-redact/filehandler"
 	"go/ast"
 	"go/parser"
 	"go/token"
 	"log"
 	"strconv"
 
-	_ "embed"
-
 	"golang.org/x/tools/go/ast/astutil"
+
+	"github.com/samkreter/grpc-go-redact/filehandler"
 )
 
 const (
 	stringFuncMethodName  = "String"
-	stringFuncGenFileName = "./gen/stringfunc.go"
+	stringFuncGenFileName = "./internal/stringfunc.go"
 )
 
-//go:embed gen/stringfunc.go
+//go:embed internal/stringfunc.go
 var stringFuncGenFile string
 
 func getGenParseInfo() (*filehandler.ParseInfo, error) {
