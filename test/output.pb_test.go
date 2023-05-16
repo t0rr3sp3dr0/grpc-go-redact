@@ -16,14 +16,22 @@ const (
 	nonSecretVal = "thisIsAStandardVal"
 )
 
+func TestStringTestEnum(t *testing.T) {
+	a := fmt.Sprint(E_A)
+	assert.Equal(t, "A", a)
+
+	b := fmt.Sprint(E_B)
+	assert.Equal(t, "B", b)
+}
+
 func TestStringTestStruct(t *testing.T) {
 	t.Run("Basic Secret Redaction", func(t *testing.T) {
-		tStruct := &X{
+		tStruct := &M{
 			NonSecret: nonSecretVal,
 			Secret:    secretVal,
 		}
 
-		strVal := fmt.Sprintln(tStruct)
+		strVal := fmt.Sprint(tStruct)
 
 		assert.False(t, strings.Contains(strVal, secretVal), "should not contain secret value")
 		assert.True(t, strings.Contains(strVal, "REDACTED"), "should contain redacted string")
@@ -31,12 +39,12 @@ func TestStringTestStruct(t *testing.T) {
 	})
 
 	t.Run("Should still redact empty strings", func(t *testing.T) {
-		tStruct := &X{
+		tStruct := &M{
 			NonSecret: nonSecretVal,
 			Secret:    "",
 		}
 
-		strVal := fmt.Sprintln(tStruct)
+		strVal := fmt.Sprint(tStruct)
 
 		assert.True(t, strings.Contains(strVal, "REDACTED"), "should contain redacted string")
 		assert.True(t, strings.Contains(strVal, nonSecretVal), "should contain  non secret value")
@@ -46,16 +54,16 @@ func TestStringTestStruct(t *testing.T) {
 
 func TestStringTestStructList(t *testing.T) {
 	t.Run("Basic Secret Redaction", func(t *testing.T) {
-		tStruct := &X{
+		tStruct := &M{
 			NonSecret: nonSecretVal,
 			Secret:    secretVal,
 		}
 
-		list := &Xs{
-			Data: []*X{tStruct},
+		list := &Ms{
+			Data: []*M{tStruct},
 		}
 
-		strVal := fmt.Sprintln(list)
+		strVal := fmt.Sprint(list)
 
 		assert.False(t, strings.Contains(strVal, secretVal), "should not contain secret value")
 		assert.True(t, strings.Contains(strVal, "REDACTED"), "should contain redacted string")
@@ -63,16 +71,16 @@ func TestStringTestStructList(t *testing.T) {
 	})
 
 	t.Run("Should still redact empty strings", func(t *testing.T) {
-		tStruct := &X{
+		tStruct := &M{
 			NonSecret: nonSecretVal,
 			Secret:    "",
 		}
 
-		list := &Xs{
-			Data: []*X{tStruct},
+		list := &Ms{
+			Data: []*M{tStruct},
 		}
 
-		strVal := fmt.Sprintln(list)
+		strVal := fmt.Sprint(list)
 
 		assert.True(t, strings.Contains(strVal, "REDACTED"), "should contain redacted string")
 		assert.True(t, strings.Contains(strVal, nonSecretVal), "should contain  non secret value")
