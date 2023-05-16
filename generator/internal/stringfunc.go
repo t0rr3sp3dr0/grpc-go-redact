@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/runtime/protoimpl"
 )
 
-type X struct {
+type M struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -20,20 +20,23 @@ type X struct {
 	NonSecretPtr *string `protobuf:"bytes,4,opt,name=nonSecretPtr,proto3,oneof" json:"nonSecretPtr,omitempty" redact:"nonsecret"`
 }
 
-func (x *X) String() string {
-	if enum, ok := (interface{})(x).(protoreflect.Enum); ok {
-		return protoimpl.X.EnumStringOf(enum.Descriptor(), enum.Number())
-	}
+func (x *M) String() string {
+	switch x := interface{}(x).(type) {
+	case protoreflect.Enum:
+		return protoimpl.X.EnumStringOf(x.Descriptor(), x.Number())
 
-	clone := proto.Clone(x)
-	if err := redact.Redact(clone); err != nil {
+	case protoreflect.ProtoMessage:
+		clone := proto.Clone(x)
+		if err := redact.Redact(clone); err != nil {
+			return ""
+		}
+		bytes, err := json.Marshal(clone)
+		if err != nil {
+			return ""
+		}
+		return string(bytes)
+
+	default:
 		return ""
 	}
-
-	bytes, err := json.Marshal(clone)
-	if err != nil {
-		return ""
-	}
-
-	return string(bytes)
 }

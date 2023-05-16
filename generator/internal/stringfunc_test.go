@@ -20,7 +20,7 @@ var (
 
 func TestString(t *testing.T) {
 	t.Run("Basic Secret Redaction", func(t *testing.T) {
-		tStruct := &X{
+		tStruct := &M{
 			Secret:       secretVal,
 			NonSecret:    nonSecretVal,
 			SecretPtr:    &secretPtrVal,
@@ -38,7 +38,7 @@ func TestString(t *testing.T) {
 	})
 
 	t.Run("Should still redact empty strings", func(t *testing.T) {
-		tStruct := &X{
+		tStruct := &M{
 			NonSecret: nonSecretVal,
 			Secret:    "",
 		}

@@ -2,13 +2,18 @@ syntax = "proto3";
 package test;
 option go_package = "github.com/samrketer/grpc-go-react/generator/gen";
 
-message X {
+enum E {
+    A = 0;
+    B = 1;
+}
+
+message M {
     string secret = 1;
     string nonSecret = 2;
     optional string secretPtr = 3;
     optional string nonSecretPtr = 4;
 }
 
-message Xs {
-    repeated X data = 1;
+message Ms {
+    repeated M data = 1;
 }

@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.30.0
 // 	protoc        v4.22.3
-// source: generator/gen/stringfunc.proto
+// source: generator/internal/stringfunc.proto
 
 package internal
 
@@ -20,8 +20,54 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type E int32
+
+const (
+	E_A E = 0
+	E_B E = 1
+)
+
+// Enum value maps for E.
+var (
+	E_name = map[int32]string{
+		0: "A",
+		1: "B",
+	}
+	E_value = map[string]int32{
+		"A": 0,
+		"B": 1,
+	}
+)
+
+func (x E) Enum() *E {
+	p := new(E)
+	*p = x
+	return p
+}
+
+func (x E) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (E) Descriptor() protoreflect.EnumDescriptor {
+	return file_generator_internal_stringfunc_proto_enumTypes[0].Descriptor()
+}
+
+func (E) Type() protoreflect.EnumType {
+	return &file_generator_internal_stringfunc_proto_enumTypes[0]
+}
+
+func (x E) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use E.Descriptor instead.
+func (E) EnumDescriptor() ([]byte, []int) {
+	return file_generator_internal_stringfunc_proto_rawDescGZIP(), []int{0}
+}
+
 /*
-type X struct {
+type M struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -33,25 +79,25 @@ type X struct {
 }
 */
 
-func (x *X) Reset() {
-	*x = X{}
+func (x *M) Reset() {
+	*x = M{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_generator_gen_stringfunc_proto_msgTypes[0]
+		mi := &file_generator_internal_stringfunc_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
 }
 
 /*
-func (x *X) String() string {
+func (x *M) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 */
 
-func (*X) ProtoMessage() {}
+func (*M) ProtoMessage() {}
 
-func (x *X) ProtoReflect() protoreflect.Message {
-	mi := &file_generator_gen_stringfunc_proto_msgTypes[0]
+func (x *M) ProtoReflect() protoreflect.Message {
+	mi := &file_generator_internal_stringfunc_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -62,64 +108,64 @@ func (x *X) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use X.ProtoReflect.Descriptor instead.
-func (*X) Descriptor() ([]byte, []int) {
-	return file_generator_gen_stringfunc_proto_rawDescGZIP(), []int{0}
+// Deprecated: Use M.ProtoReflect.Descriptor instead.
+func (*M) Descriptor() ([]byte, []int) {
+	return file_generator_internal_stringfunc_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *X) GetSecret() string {
+func (x *M) GetSecret() string {
 	if x != nil {
 		return x.Secret
 	}
 	return ""
 }
 
-func (x *X) GetNonSecret() string {
+func (x *M) GetNonSecret() string {
 	if x != nil {
 		return x.NonSecret
 	}
 	return ""
 }
 
-func (x *X) GetSecretPtr() string {
+func (x *M) GetSecretPtr() string {
 	if x != nil && x.SecretPtr != nil {
 		return *x.SecretPtr
 	}
 	return ""
 }
 
-func (x *X) GetNonSecretPtr() string {
+func (x *M) GetNonSecretPtr() string {
 	if x != nil && x.NonSecretPtr != nil {
 		return *x.NonSecretPtr
 	}
 	return ""
 }
 
-type Xs struct {
+type Ms struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Data []*X `protobuf:"bytes,1,rep,name=data,proto3" json:"data,omitempty"`
+	Data []*M `protobuf:"bytes,1,rep,name=data,proto3" json:"data,omitempty"`
 }
 
-func (x *Xs) Reset() {
-	*x = Xs{}
+func (x *Ms) Reset() {
+	*x = Ms{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_generator_gen_stringfunc_proto_msgTypes[1]
+		mi := &file_generator_internal_stringfunc_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
 }
 
-func (x *Xs) String() string {
+func (x *Ms) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Xs) ProtoMessage() {}
+func (*Ms) ProtoMessage() {}
 
-func (x *Xs) ProtoReflect() protoreflect.Message {
-	mi := &file_generator_gen_stringfunc_proto_msgTypes[1]
+func (x *Ms) ProtoReflect() protoreflect.Message {
+	mi := &file_generator_internal_stringfunc_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -130,61 +176,65 @@ func (x *Xs) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Xs.ProtoReflect.Descriptor instead.
-func (*Xs) Descriptor() ([]byte, []int) {
-	return file_generator_gen_stringfunc_proto_rawDescGZIP(), []int{1}
+// Deprecated: Use Ms.ProtoReflect.Descriptor instead.
+func (*Ms) Descriptor() ([]byte, []int) {
+	return file_generator_internal_stringfunc_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *Xs) GetData() []*X {
+func (x *Ms) GetData() []*M {
 	if x != nil {
 		return x.Data
 	}
 	return nil
 }
 
-var File_generator_gen_stringfunc_proto protoreflect.FileDescriptor
+var File_generator_internal_stringfunc_proto protoreflect.FileDescriptor
 
-var file_generator_gen_stringfunc_proto_rawDesc = []byte{
-	0x0a, 0x1e, 0x67, 0x65, 0x6e, 0x65, 0x72, 0x61, 0x74, 0x6f, 0x72, 0x2f, 0x67, 0x65, 0x6e, 0x2f,
-	0x73, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x66, 0x75, 0x6e, 0x63, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x12, 0x04, 0x74, 0x65, 0x73, 0x74, 0x22, 0xa4, 0x01, 0x0a, 0x01, 0x58, 0x12, 0x16, 0x0a, 0x06,
-	0x73, 0x65, 0x63, 0x72, 0x65, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x73, 0x65,
-	0x63, 0x72, 0x65, 0x74, 0x12, 0x1c, 0x0a, 0x09, 0x6e, 0x6f, 0x6e, 0x53, 0x65, 0x63, 0x72, 0x65,
-	0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x6e, 0x6f, 0x6e, 0x53, 0x65, 0x63, 0x72,
-	0x65, 0x74, 0x12, 0x21, 0x0a, 0x09, 0x73, 0x65, 0x63, 0x72, 0x65, 0x74, 0x50, 0x74, 0x72, 0x18,
-	0x03, 0x20, 0x01, 0x28, 0x09, 0x48, 0x00, 0x52, 0x09, 0x73, 0x65, 0x63, 0x72, 0x65, 0x74, 0x50,
-	0x74, 0x72, 0x88, 0x01, 0x01, 0x12, 0x27, 0x0a, 0x0c, 0x6e, 0x6f, 0x6e, 0x53, 0x65, 0x63, 0x72,
-	0x65, 0x74, 0x50, 0x74, 0x72, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x48, 0x01, 0x52, 0x0c, 0x6e,
-	0x6f, 0x6e, 0x53, 0x65, 0x63, 0x72, 0x65, 0x74, 0x50, 0x74, 0x72, 0x88, 0x01, 0x01, 0x42, 0x0c,
-	0x0a, 0x0a, 0x5f, 0x73, 0x65, 0x63, 0x72, 0x65, 0x74, 0x50, 0x74, 0x72, 0x42, 0x0f, 0x0a, 0x0d,
-	0x5f, 0x6e, 0x6f, 0x6e, 0x53, 0x65, 0x63, 0x72, 0x65, 0x74, 0x50, 0x74, 0x72, 0x22, 0x21, 0x0a,
-	0x02, 0x58, 0x73, 0x12, 0x1b, 0x0a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x18, 0x01, 0x20, 0x03, 0x28,
-	0x0b, 0x32, 0x07, 0x2e, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x58, 0x52, 0x04, 0x64, 0x61, 0x74, 0x61,
-	0x42, 0x32, 0x5a, 0x30, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x73,
-	0x61, 0x6d, 0x72, 0x6b, 0x65, 0x74, 0x65, 0x72, 0x2f, 0x67, 0x72, 0x70, 0x63, 0x2d, 0x67, 0x6f,
-	0x2d, 0x72, 0x65, 0x61, 0x63, 0x74, 0x2f, 0x67, 0x65, 0x6e, 0x65, 0x72, 0x61, 0x74, 0x6f, 0x72,
-	0x2f, 0x67, 0x65, 0x6e, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+var file_generator_internal_stringfunc_proto_rawDesc = []byte{
+	0x0a, 0x23, 0x67, 0x65, 0x6e, 0x65, 0x72, 0x61, 0x74, 0x6f, 0x72, 0x2f, 0x69, 0x6e, 0x74, 0x65,
+	0x72, 0x6e, 0x61, 0x6c, 0x2f, 0x73, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x66, 0x75, 0x6e, 0x63, 0x2e,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x04, 0x74, 0x65, 0x73, 0x74, 0x22, 0xa4, 0x01, 0x0a, 0x01,
+	0x4d, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x65, 0x63, 0x72, 0x65, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x06, 0x73, 0x65, 0x63, 0x72, 0x65, 0x74, 0x12, 0x1c, 0x0a, 0x09, 0x6e, 0x6f, 0x6e,
+	0x53, 0x65, 0x63, 0x72, 0x65, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x6e, 0x6f,
+	0x6e, 0x53, 0x65, 0x63, 0x72, 0x65, 0x74, 0x12, 0x21, 0x0a, 0x09, 0x73, 0x65, 0x63, 0x72, 0x65,
+	0x74, 0x50, 0x74, 0x72, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x48, 0x00, 0x52, 0x09, 0x73, 0x65,
+	0x63, 0x72, 0x65, 0x74, 0x50, 0x74, 0x72, 0x88, 0x01, 0x01, 0x12, 0x27, 0x0a, 0x0c, 0x6e, 0x6f,
+	0x6e, 0x53, 0x65, 0x63, 0x72, 0x65, 0x74, 0x50, 0x74, 0x72, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09,
+	0x48, 0x01, 0x52, 0x0c, 0x6e, 0x6f, 0x6e, 0x53, 0x65, 0x63, 0x72, 0x65, 0x74, 0x50, 0x74, 0x72,
+	0x88, 0x01, 0x01, 0x42, 0x0c, 0x0a, 0x0a, 0x5f, 0x73, 0x65, 0x63, 0x72, 0x65, 0x74, 0x50, 0x74,
+	0x72, 0x42, 0x0f, 0x0a, 0x0d, 0x5f, 0x6e, 0x6f, 0x6e, 0x53, 0x65, 0x63, 0x72, 0x65, 0x74, 0x50,
+	0x74, 0x72, 0x22, 0x21, 0x0a, 0x02, 0x4d, 0x73, 0x12, 0x1b, 0x0a, 0x04, 0x64, 0x61, 0x74, 0x61,
+	0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x07, 0x2e, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x4d, 0x52,
+	0x04, 0x64, 0x61, 0x74, 0x61, 0x2a, 0x11, 0x0a, 0x01, 0x45, 0x12, 0x05, 0x0a, 0x01, 0x41, 0x10,
+	0x00, 0x12, 0x05, 0x0a, 0x01, 0x42, 0x10, 0x01, 0x42, 0x32, 0x5a, 0x30, 0x67, 0x69, 0x74, 0x68,
+	0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x73, 0x61, 0x6d, 0x72, 0x6b, 0x65, 0x74, 0x65, 0x72,
+	0x2f, 0x67, 0x72, 0x70, 0x63, 0x2d, 0x67, 0x6f, 0x2d, 0x72, 0x65, 0x61, 0x63, 0x74, 0x2f, 0x67,
+	0x65, 0x6e, 0x65, 0x72, 0x61, 0x74, 0x6f, 0x72, 0x2f, 0x67, 0x65, 0x6e, 0x62, 0x06, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
-	file_generator_gen_stringfunc_proto_rawDescOnce sync.Once
-	file_generator_gen_stringfunc_proto_rawDescData = file_generator_gen_stringfunc_proto_rawDesc
+	file_generator_internal_stringfunc_proto_rawDescOnce sync.Once
+	file_generator_internal_stringfunc_proto_rawDescData = file_generator_internal_stringfunc_proto_rawDesc
 )
 
-func file_generator_gen_stringfunc_proto_rawDescGZIP() []byte {
-	file_generator_gen_stringfunc_proto_rawDescOnce.Do(func() {
-		file_generator_gen_stringfunc_proto_rawDescData = protoimpl.X.CompressGZIP(file_generator_gen_stringfunc_proto_rawDescData)
+func file_generator_internal_stringfunc_proto_rawDescGZIP() []byte {
+	file_generator_internal_stringfunc_proto_rawDescOnce.Do(func() {
+		file_generator_internal_stringfunc_proto_rawDescData = protoimpl.X.CompressGZIP(file_generator_internal_stringfunc_proto_rawDescData)
 	})
-	return file_generator_gen_stringfunc_proto_rawDescData
+	return file_generator_internal_stringfunc_proto_rawDescData
 }
 
-var file_generator_gen_stringfunc_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
-var file_generator_gen_stringfunc_proto_goTypes = []interface{}{
-	(*X)(nil),  // 0: test.X
-	(*Xs)(nil), // 1: test.Xs
+var file_generator_internal_stringfunc_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_generator_internal_stringfunc_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_generator_internal_stringfunc_proto_goTypes = []interface{}{
+	(E)(0),     // 0: test.E
+	(*M)(nil),  // 1: test.M
+	(*Ms)(nil), // 2: test.Ms
 }
-var file_generator_gen_stringfunc_proto_depIdxs = []int32{
-	0, // 0: test.Xs.data:type_name -> test.X
+var file_generator_internal_stringfunc_proto_depIdxs = []int32{
+	1, // 0: test.Ms.data:type_name -> test.M
 	1, // [1:1] is the sub-list for method output_type
 	1, // [1:1] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
@@ -192,14 +242,14 @@ var file_generator_gen_stringfunc_proto_depIdxs = []int32{
 	0, // [0:1] is the sub-list for field type_name
 }
 
-func init() { file_generator_gen_stringfunc_proto_init() }
-func file_generator_gen_stringfunc_proto_init() {
-	if File_generator_gen_stringfunc_proto != nil {
+func init() { file_generator_internal_stringfunc_proto_init() }
+func file_generator_internal_stringfunc_proto_init() {
+	if File_generator_internal_stringfunc_proto != nil {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_generator_gen_stringfunc_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*X); i {
+		file_generator_internal_stringfunc_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*M); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -210,8 +260,8 @@ func file_generator_gen_stringfunc_proto_init() {
 				return nil
 			}
 		}
-		file_generator_gen_stringfunc_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Xs); i {
+		file_generator_internal_stringfunc_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Ms); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -223,23 +273,24 @@ func file_generator_gen_stringfunc_proto_init() {
 			}
 		}
 	}
-	file_generator_gen_stringfunc_proto_msgTypes[0].OneofWrappers = []interface{}{}
+	file_generator_internal_stringfunc_proto_msgTypes[0].OneofWrappers = []interface{}{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_generator_gen_stringfunc_proto_rawDesc,
-			NumEnums:      0,
+			RawDescriptor: file_generator_internal_stringfunc_proto_rawDesc,
+			NumEnums:      1,
 			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_generator_gen_stringfunc_proto_goTypes,
-		DependencyIndexes: file_generator_gen_stringfunc_proto_depIdxs,
-		MessageInfos:      file_generator_gen_stringfunc_proto_msgTypes,
+		GoTypes:           file_generator_internal_stringfunc_proto_goTypes,
+		DependencyIndexes: file_generator_internal_stringfunc_proto_depIdxs,
+		EnumInfos:         file_generator_internal_stringfunc_proto_enumTypes,
+		MessageInfos:      file_generator_internal_stringfunc_proto_msgTypes,
 	}.Build()
-	File_generator_gen_stringfunc_proto = out.File
-	file_generator_gen_stringfunc_proto_rawDesc = nil
-	file_generator_gen_stringfunc_proto_goTypes = nil
-	file_generator_gen_stringfunc_proto_depIdxs = nil
+	File_generator_internal_stringfunc_proto = out.File
+	file_generator_internal_stringfunc_proto_rawDesc = nil
+	file_generator_internal_stringfunc_proto_goTypes = nil
+	file_generator_internal_stringfunc_proto_depIdxs = nil
 }
