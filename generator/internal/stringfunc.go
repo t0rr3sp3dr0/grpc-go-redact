@@ -21,7 +21,12 @@ type M struct {
 }
 
 func (x *M) String() string {
-	switch x := interface{}(x).(type) {
+	i := interface{}(x)
+	if i == nil {
+		return "null"
+	}
+
+	switch x := i.(type) {
 	case protoreflect.Enum:
 		return protoimpl.X.EnumStringOf(x.Descriptor(), x.Number())
 
