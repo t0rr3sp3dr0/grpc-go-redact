@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/samkreter/grpc-go-redact/filehandler"
-	"github.com/samkreter/grpc-go-redact/generator"
+	"github.com/Azure/grpc-go-redact/filehandler"
+	"github.com/Azure/grpc-go-redact/generator"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -2,8 +2,8 @@ package worker
 
 import (
 	"context"
-	"github.com/samkreter/grpc-go-redact/filehandler"
-	"github.com/samkreter/grpc-go-redact/generator"
+	"github.com/Azure/grpc-go-redact/filehandler"
+	"github.com/Azure/grpc-go-redact/generator"
 	"sync"
 
 	"github.com/samkreter/go-core/log"

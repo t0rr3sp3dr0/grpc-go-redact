@@ -11,7 +11,7 @@ import (
 
 	"golang.org/x/tools/go/ast/astutil"
 
-	"github.com/samkreter/grpc-go-redact/filehandler"
+	"github.com/Azure/grpc-go-redact/filehandler"
 )
 
 const (

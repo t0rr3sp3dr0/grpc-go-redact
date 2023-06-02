@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 	"flag"
-	"github.com/samkreter/grpc-go-redact/filehandler"
-	"github.com/samkreter/grpc-go-redact/worker"
+	"github.com/Azure/grpc-go-redact/filehandler"
+	"github.com/Azure/grpc-go-redact/worker"
 
 	"github.com/samkreter/go-core/log"
 )

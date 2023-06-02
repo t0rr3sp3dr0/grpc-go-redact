@@ -7,7 +7,7 @@ This package runs after GRPC generation to automaticly overrite the `.String()` 
 
 ## Install
 
-*  `go get github.com/samkreter/grpc-go-redact` or download the
+*  `go get github.com/Azure/grpc-go-redact` or download the
   binaries from releases page.
 
 * Building from source requires go 1.16+

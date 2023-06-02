@@ -1,31 +1,31 @@
+# github.com/Azure/redact v0.0.6
+## explicit; go 1.19
+github.com/Azure/redact
 # github.com/davecgh/go-spew v1.1.1
-github.com/davecgh/go-spew/spew
-# github.com/golang/protobuf v1.4.3
 ## explicit
-github.com/golang/protobuf/proto
+github.com/davecgh/go-spew/spew
 # github.com/pmezard/go-difflib v1.0.0
+## explicit
 github.com/pmezard/go-difflib/difflib
 # github.com/samkreter/go-core v0.1.0
 ## explicit
 github.com/samkreter/go-core/log
-# github.com/samkreter/redact v0.0.2
-## explicit
-github.com/samkreter/redact
 # github.com/sirupsen/logrus v1.8.1
-## explicit
+## explicit; go 1.13
 github.com/sirupsen/logrus
 # github.com/stretchr/testify v1.7.0
-## explicit
+## explicit; go 1.13
 github.com/stretchr/testify/assert
 # golang.org/x/sys v0.0.0-20210119212857-b64e53b001e4
+## explicit; go 1.12
 golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
 golang.org/x/sys/windows
 # golang.org/x/tools v0.1.0
-## explicit
+## explicit; go 1.12
 golang.org/x/tools/go/ast/astutil
 # google.golang.org/protobuf v1.25.0
-## explicit
+## explicit; go 1.9
 google.golang.org/protobuf/encoding/prototext
 google.golang.org/protobuf/encoding/protowire
 google.golang.org/protobuf/internal/descfmt
@@ -53,4 +53,5 @@ google.golang.org/protobuf/reflect/protoregistry
 google.golang.org/protobuf/runtime/protoiface
 google.golang.org/protobuf/runtime/protoimpl
 # gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c
+## explicit
 gopkg.in/yaml.v3
