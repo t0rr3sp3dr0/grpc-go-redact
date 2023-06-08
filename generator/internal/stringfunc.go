@@ -2,6 +2,7 @@ package internal
 
 import (
 	"encoding/json"
+	"reflect"
 
 	"github.com/Azure/redact"
 	"google.golang.org/protobuf/proto"
@@ -22,8 +23,10 @@ type M struct {
 
 func (x *M) String() string {
 	i := interface{}(x)
-	if i == nil {
-		return "null"
+
+	v := reflect.ValueOf(i)
+	if v.Kind() == reflect.Pointer && v.IsNil() {
+		return "{}"
 	}
 
 	switch x := i.(type) {

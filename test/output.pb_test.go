@@ -116,3 +116,38 @@ func TestReadAndWrite(t *testing.T) {
 		assert.Equal(t, baseBytes, writenBytes)
 	})
 }
+
+func TestNil(t *testing.T) {
+	t.Run("Nil protoreflect.Enum", func(t *testing.T) {
+		var e *E
+
+		defer func() {
+			r := recover()
+			assert.NotNil(t, r)
+		}()
+
+		_ = e.String()
+		assert.Fail(t, "it should have panicked")
+	})
+
+	t.Run("Zero protoreflect.Enum", func(t *testing.T) {
+		var e E
+
+		s := e.String()
+		assert.NotEqual(t, "{}", s)
+	})
+
+	t.Run("Nil protoreflect.ProtoMessage", func(t *testing.T) {
+		var m *M
+
+		s := m.String()
+		assert.Equal(t, "{}", s)
+	})
+
+	t.Run("Zero protoreflect.ProtoMessage", func(t *testing.T) {
+		var m M
+
+		s := m.String()
+		assert.NotEqual(t, "{}", s)
+	})
+}
